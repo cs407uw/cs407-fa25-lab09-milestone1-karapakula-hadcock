@@ -47,8 +47,8 @@ class BallViewModel : ViewModel() {
 
                 // Update the ball's position and velocity
                 // The sensor's x and y-axis are inverted relative to view coordinates
-                val xAcc = -event.values[0]
-                val yAcc = -event.values[1]
+                val xAcc = event.values[0]
+                val yAcc = event.values[1]
 
                 currentBall.updatePositionAndVelocity(xAcc = xAcc, yAcc = yAcc, dT = dT)
 
