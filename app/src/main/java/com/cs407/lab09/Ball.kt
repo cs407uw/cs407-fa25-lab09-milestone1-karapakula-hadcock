@@ -23,7 +23,8 @@ class Ball(
     private var isFirstUpdate = true
 
     init {
-        // TODO: Call reset()
+        // Call reset to initialize position/velocity/acceleration
+        reset()
     }
 
     /**
@@ -38,6 +39,28 @@ class Ball(
             return
         }
 
+        // Use the provided formulas:
+        // v(t1) = v0 + 1/2 * (a1 + a0) * dt
+        // l = v0 * dt + 1/6 * dt^2 * (3a0 + a1)
+        val dt = dT
+
+        // Compute displacement based on current velocity (v0) and accelerations (a0, a1)
+        val deltaX = velocityX * dt + (dt * dt) / 6f * (3f * accX + xAcc)
+        val deltaY = velocityY * dt + (dt * dt) / 6f * (3f * accY + yAcc)
+
+        posX += deltaX
+        posY += deltaY
+
+        // Update velocities
+        velocityX += 0.5f * (accX + xAcc) * dt
+        velocityY += 0.5f * (accY + yAcc) * dt
+
+        // Update accelerations for next step
+        accX = xAcc
+        accY = yAcc
+
+        // Ensure we remain within bounds
+        checkBoundaries()
     }
 
     /**
@@ -46,8 +69,35 @@ class Ball(
      * boundary should be set to 0.
      */
     fun checkBoundaries() {
-        // TODO: implement the checkBoundaries function
-        // (Check all 4 walls: left, right, top, bottom)
+        // Left wall
+        if (posX < 0f) {
+            posX = 0f
+            velocityX = 0f
+            accX = 0f
+        }
+
+        // Right wall
+        val maxX = backgroundWidth - ballSize
+        if (posX > maxX) {
+            posX = maxX
+            velocityX = 0f
+            accX = 0f
+        }
+
+        // Top wall
+        if (posY < 0f) {
+            posY = 0f
+            velocityY = 0f
+            accY = 0f
+        }
+
+        // Bottom wall
+        val maxY = backgroundHeight - ballSize
+        if (posY > maxY) {
+            posY = maxY
+            velocityY = 0f
+            accY = 0f
+        }
     }
 
     /**
@@ -55,7 +105,12 @@ class Ball(
      * velocity and acceleration.
      */
     fun reset() {
-        // TODO: implement the reset function
-        // (Reset posX, posY, velocityX, velocityY, accX, accY, isFirstUpdate)
+        posX = backgroundWidth / 2f - ballSize / 2f
+        posY = backgroundHeight / 2f - ballSize / 2f
+        velocityX = 0f
+        velocityY = 0f
+        accX = 0f
+        accY = 0f
+        isFirstUpdate = true
     }
 }
