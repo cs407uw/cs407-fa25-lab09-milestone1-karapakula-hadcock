@@ -39,21 +39,17 @@ class Ball(
             return
         }
 
-        // Use the provided formulas:
-        // v(t1) = v0 + 1/2 * (a1 + a0) * dt
+
         // l = v0 * dt + 1/6 * dt^2 * (3a0 + a1)
-        val dt = dT
+        val dX = velocityX * dT + (dT * dT) / 6f * (3f * accX + xAcc)
+        val dY = velocityY * dT + (dT * dT) / 6f * (3f * accY + yAcc)
 
-        // Compute displacement based on current velocity (v0) and accelerations (a0, a1)
-        val deltaX = velocityX * dt + (dt * dt) / 6f * (3f * accX + xAcc)
-        val deltaY = velocityY * dt + (dt * dt) / 6f * (3f * accY + yAcc)
+        posX += dX
+        posY += dY
 
-        posX += deltaX
-        posY += deltaY
-
-        // Update velocities
-        velocityX += 0.5f * (accX + xAcc) * dt
-        velocityY += 0.5f * (accY + yAcc) * dt
+        // v(t1) = v0 + 1/2 * (a1 + a0) * dt
+        velocityX += 0.5f * (accX + xAcc) * dT
+        velocityY += 0.5f * (accY + yAcc) * dT
 
         // Update accelerations for next step
         accX = xAcc
@@ -77,9 +73,8 @@ class Ball(
         }
 
         // Right wall
-        val maxX = backgroundWidth - ballSize
-        if (posX > maxX) {
-            posX = maxX
+        if (posX > backgroundWidth - ballSize) {
+            posX = backgroundWidth - ballSize
             velocityX = 0f
             accX = 0f
         }
@@ -92,9 +87,8 @@ class Ball(
         }
 
         // Bottom wall
-        val maxY = backgroundHeight - ballSize
-        if (posY > maxY) {
-            posY = maxY
+        if (posY > backgroundHeight - ballSize) {
+            posY = backgroundHeight - ballSize
             velocityY = 0f
             accY = 0f
         }
